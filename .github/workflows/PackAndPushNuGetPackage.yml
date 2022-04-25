@@ -5,11 +5,10 @@ jobs:
     build:
       runs-on: windows-latest
       timeout-minutes: 15
+      env:
+        PAT: ${{ secrets.PAT }}
+        GITHUB_ACTOR: ${{ github.actor }}
       steps:
-        - name: Set environment variables
-          env:
-            PAT: ${{ secrets.PAT }}
-            GITHUB_ACTOR: ${{ github.actor }}
         - name: Checkout
           uses: actions/checkout@v2
         - name: Add GitHub Packages Source and Authentication
