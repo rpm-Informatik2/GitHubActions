@@ -6,10 +6,15 @@ jobs:
       runs-on: windows-latest
       timeout-minutes: 15
       steps:
+        - shell: pwsh
+        - name: Set environment variables
+          env:
+            PAT: ${{ secrets.PAT }}
+            GITHUB_ACTOR: ${{ github.actor }}
         - name: Checkout
           uses: actions/checkout@v2
         - name: Add GitHub Packages Source and Authentication
-          run: dotnet nuget add source --username ${{ github.actor }} --password ${{ secrets.PAT }} --store-password-in-clear-text --name RpmInformatik2 "https://nuget.pkg.github.com/rpm-Informatik2/index.json"
+          run: dotnet nuget add source --username "$env:GITHUB_ACTOR" --password "$env:PAT" --store-password-in-clear-text --name RpmInformatik2 "https://nuget.pkg.github.com/rpm-Informatik2/index.json"
         - name: Build
           run: dotnet build --configuration Release /p:Version=${VERSION}
         - name: Test
