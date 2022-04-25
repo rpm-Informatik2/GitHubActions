@@ -6,7 +6,6 @@ jobs:
       runs-on: windows-latest
       timeout-minutes: 15
       steps:
-        - shell: pwsh
         - name: Set environment variables
           env:
             PAT: ${{ secrets.PAT }}
