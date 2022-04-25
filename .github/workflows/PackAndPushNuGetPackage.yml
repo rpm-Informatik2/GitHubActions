@@ -17,12 +17,12 @@ jobs:
         - name: Checkout
           uses: actions/checkout@v2
         - name: Add GitHub Packages Source and Authentication
-          run: dotnet nuget add source --username "$env:GITHUB_ACTOR" --password "$env:PAT" --store-password-in-clear-text --name github "https://nuget.pkg.github.com/rpm-Informatik2/index.json"
+          run: dotnet nuget add source --username "$GITHUB_ACTOR" --password "$PAT" --store-password-in-clear-text --name github "https://nuget.pkg.github.com/rpm-Informatik2/index.json"
         - name: Build
-          run: dotnet build --configuration Release /p:Version="$env:VERSION"
+          run: dotnet build --configuration Release /p:Version="$VERSION"
         - name: Test
-          run: dotnet test --configuration Release /p:Version="$env:VERSION" --no-build
+          run: dotnet test --configuration Release /p:Version="$VERSION" --no-build
         - name: Pack
-          run: dotnet pack --configuration Release /p:Version="$env:VERSION" --no-build --output .
+          run: dotnet pack --configuration Release /p:Version="$VERSION" --no-build --output .
         - name: Push
-          run: dotnet nuget push ${{ github.event.repository.name }}."$env:VERSION".nupkg --source https://nuget.pkg.github.com/rpm-Informatik2/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
+          run: dotnet nuget push ${{ github.event.repository.name }}."$VERSION".nupkg --source https://nuget.pkg.github.com/rpm-Informatik2/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
