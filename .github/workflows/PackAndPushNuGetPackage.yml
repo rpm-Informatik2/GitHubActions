@@ -19,7 +19,7 @@ jobs:
         - name: Add GitHub Packages Source and Authentication
           run: dotnet nuget add source --username "$env:GITHUB_ACTOR" --password "$env:PAT" --store-password-in-clear-text --name RpmInformatik2 "https://nuget.pkg.github.com/rpm-Informatik2/index.json"
         - name: Build
-          run: dotnet build --configuration Release /p:Version=0.2.23
+          run: dotnet build --configuration Release /p:Version="$env:VERSION"
         - name: Test
           run: dotnet test --configuration Release /p:Version="$env:VERSION" --no-build
         - name: Pack
