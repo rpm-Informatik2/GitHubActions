@@ -25,6 +25,4 @@ jobs:
         - name: Pack
           run: dotnet pack --configuration Release /p:Version="$env:VERSION" --no-build --output .
         - name: Push
-          run: dotnet nuget push ${{ github.event.repository.name }}."$env:VERSION".nupkg --source https://nuget.pkg.github.com/rpm-Informatik2/index.json --api-key ${GITHUB_TOKEN}
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          run: dotnet nuget push ${{ github.event.repository.name }}."$env:VERSION".nupkg --source https://nuget.pkg.github.com/rpm-Informatik2/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
