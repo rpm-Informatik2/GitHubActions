@@ -4,6 +4,9 @@ on:
       VERSION:
         required: true
         type: string
+    secrets:
+      PAT:
+        required: true
   
 jobs:
     build:
