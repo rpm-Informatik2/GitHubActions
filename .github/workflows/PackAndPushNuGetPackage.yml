@@ -17,7 +17,7 @@ jobs:
         - name: Checkout
           uses: actions/checkout@v2
         - name: Add GitHub Packages Source and Authentication
-          run: dotnet nuget add source --username "$GITHUB_ACTOR" --password "$PAT" --store-password-in-clear-text --name github "https://nuget.pkg.github.com/rpm-Informatik2/index.json"
+          run: dotnet nuget add source --username "$GITHUB_ACTOR" --password "$PAT" --store-password-in-clear-text --name RpmInformatik2 "https://nuget.pkg.github.com/rpm-Informatik2/index.json"
         - name: Build
           run: dotnet build --configuration Release /p:Version="$VERSION"
         - name: Test
