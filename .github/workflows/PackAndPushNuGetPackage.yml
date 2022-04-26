@@ -10,13 +10,14 @@ jobs:
       runs-on: ubuntu-latest
       timeout-minutes: 15
       env:
-        PAT: ${{ secrets.PAT }}
         GITHUB_ACTOR: ${{ github.actor }}
         VERSION: ${{ inputs.VERSION }}
       steps:
         - name: Checkout
           uses: actions/checkout@v2
         - name: Add GitHub Packages Source and Authentication
+          env:
+            PAT: ${{ secrets.PAT }}
           run: dotnet nuget add source --username "$GITHUB_ACTOR" --password "$PAT" --store-password-in-clear-text --name RpmInformatik2 "https://nuget.pkg.github.com/rpm-Informatik2/index.json"
         - name: Build
           run: dotnet build --configuration Release /p:Version="$VERSION"
