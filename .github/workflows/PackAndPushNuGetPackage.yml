@@ -12,47 +12,15 @@ jobs:
       PAT: ${{ secrets.PAT }}
       GITHUB_ACTOR: ${{ github.actor }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Set VERSION variable from tag
+      - name: Checkout repository of caller workflow
+        uses: actions/checkout@v3
+      - name: Set VERSION environment variable from tag
         run: echo "VERSION=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
-      - name: Add GitHub Packages Source and Authentication
+      - name: Add rpm GitHub Packages Source
         run: dotnet nuget add source --username "$GITHUB_ACTOR" --password "$PAT" --store-password-in-clear-text --name RpmInformatik2 "https://nuget.pkg.github.com/rpm-Informatik2/index.json"
-      - name: Build
+      - name: Build Solution
         run: dotnet build --configuration Release /p:Version="$VERSION"
-      - name: Pack
+      - name: Pack NuGet Package
         run: dotnet pack --configuration Release /p:Version="$VERSION" --no-build --output .
-      - name: Push
+      - name: Push to GitHub Packages
         run: dotnet nuget push ${{ github.event.repository.name }}."$VERSION".nupkg --source https://nuget.pkg.github.com/rpm-Informatik2/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
-# FALLBACK:
-#on:
-#  workflow_call:
-#    inputs:
-#      VERSION:
-#        required: true
-#        type: string
-#    secrets:
-#      PAT:
-#        required: true
-#
-#jobs:
-#    build:
-#      runs-on: ubuntu-latest
-#      timeout-minutes: 15
-#      env:
-#        PAT: ${{ secrets.PAT }}
-#        GITHUB_ACTOR: ${{ github.actor }}
-#        VERSION: ${{ inputs.VERSION }}
-#      steps:
-#        - name: Checkout
-#          uses: actions/checkout@v2
-#        - name: Add GitHub Packages Source and Authentication
-#          run: dotnet nuget add source --username "$GITHUB_ACTOR" --password "$PAT" --store-password-in-clear-text --name RpmInformatik2 "https://nuget.pkg.github.com/rpm-Informatik2/index.json"
-#        - name: Build
-#          run: dotnet build --configuration Release /p:Version="$VERSION"
-#        - name: Test
-#          run: dotnet test --configuration Release /p:Version="$VERSION" --no-build
-#        - name: Pack
-#          run: dotnet pack --configuration Release /p:Version="$VERSION" --no-build --output .
-#        - name: Push
-#          run: dotnet nuget push ${{ github.event.repository.name }}."$VERSION".nupkg --source https://nuget.pkg.github.com/rpm-Informatik2/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
