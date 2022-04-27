@@ -3,36 +3,27 @@ on:
     secrets:
       PAT:
         required: true
-  
+
 jobs:
-    build:
-      runs-on: ubuntu-latest
-      timeout-minutes: 15
-      env:
-        PAT: ${{ secrets.PAT }}
-        GITHUB_ACTOR: ${{ github.actor }}
-      steps:
-        - name: Checkout
-          uses: actions/checkout@v2
-        - name: Verify commit exists in origin/master
-          run: |
-            git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
-            git branch --remote --contains | grep origin/master
-        - name: Set VERSION variable from tag
-          run: echo "VERSION=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
-        - name: Checkout
-          uses: actions/checkout@v2
-        - name: Add GitHub Packages Source and Authentication
-          run: dotnet nuget add source --username "$GITHUB_ACTOR" --password "$PAT" --store-password-in-clear-text --name RpmInformatik2 "https://nuget.pkg.github.com/rpm-Informatik2/index.json"
-        - name: Build
-          run: dotnet build --configuration Release /p:Version=${VERSION}
-        - name: Test
-          run: dotnet test --configuration Release /p:Version=${VERSION} --no-build
-        - name: Pack
-          run: dotnet pack --configuration Release /p:Version=${VERSION} --no-build --output .
-        - name: Push
-          run: dotnet nuget push ${{ github.event.repository.name }}.${VERSION}.nupkg --source https://nuget.pkg.github.com/rpm-Informatik2/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
-          
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PAT: ${{ secrets.PAT }}
+      GITHUB_ACTOR: ${{ github.actor }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set VERSION variable from tag
+        run: echo "VERSION=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
+      - name: Add GitHub Packages Source and Authentication
+        run: dotnet nuget add source --username "$GITHUB_ACTOR" --password "$PAT" --store-password-in-clear-text --name RpmInformatik2 "https://nuget.pkg.github.com/rpm-Informatik2/index.json"
+      - name: Build
+        run: dotnet build --configuration Release /p:Version=${VERSION}
+      - name: Pack
+        run: dotnet pack --configuration Release /p:Version=${VERSION} --no-build --output .
+      - name: Push
+        run: dotnet nuget push ${{ github.event.repository.name }}.${VERSION}.nupkg --source https://nuget.pkg.github.com/rpm-Informatik2/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
 # FALLBACK:
 #on:
 #  workflow_call:
@@ -43,7 +34,7 @@ jobs:
 #    secrets:
 #      PAT:
 #        required: true
-#  
+#
 #jobs:
 #    build:
 #      runs-on: ubuntu-latest
