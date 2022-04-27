@@ -5,7 +5,7 @@ on:
         required: true
 
 jobs:
-  pack-and-push-the-nuget-package:
+  pack-and-push-nuget-package:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
